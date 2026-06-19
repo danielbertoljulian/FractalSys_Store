@@ -133,20 +133,25 @@ export default function AudioReactiveHero({ src, alt, width, height, className =
   }, [active]);
 
   return (
-    <div className={`relative w-full ${className}`}>
-      <FuzzyImage
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        baseIntensity={baseIntensity}
-        hoverIntensity={hoverIntensity}
-        dynamicIntensity={dynamicIntensity}
-        fuzzRange={fuzzRange}
-        enableHover
-        className="relative z-10 w-full h-auto mx-auto max-w-[90vw] md:max-w-none md:scale-[1.07] origin-center"
-      />
-      <HeroParticles />
+    <div className={`relative w-full flex justify-center ${className}`}>
+      <div 
+        className="relative z-10" 
+        style={{ width: `${width}px`, height: 'auto', maxWidth: '100%' }}
+      >
+        <FuzzyImage
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          baseIntensity={baseIntensity}
+          hoverIntensity={hoverIntensity}
+          dynamicIntensity={dynamicIntensity}
+          fuzzRange={fuzzRange}
+          enableHover
+          className="w-full h-auto origin-center"
+        />
+        <HeroParticles />
+      </div>
 
       {error && <p className="absolute left-1/2 -translate-x-1/2 -bottom-5 z-30 text-[11px] text-red-500">{error}</p>}
     </div>
