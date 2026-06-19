@@ -1,7 +1,7 @@
 import { put, get, list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
-const BLOB_KEY = 'admin/products.json';
+const BLOB_KEY = 'store/admin-products.json';
 
 async function streamToString(stream: ReadableStream<Uint8Array>): Promise<string> {
   const reader = stream.getReader();
@@ -18,14 +18,20 @@ async function streamToString(stream: ReadableStream<Uint8Array>): Promise<strin
 
 async function readProducts(): Promise<any[]> {
   try {
-    // First try list() to find all blob URLs
-    const { blobs } = await list({ prefix: 'admin/' });
+    const { blobs } = await list({ prefix: 'store/admin-products' });
     if (blobs.length === 0) return [];
-    // Sort by uploadedAt descending and take the latest
     const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0];
-    const res = await fetch(latest.url);
-    if (!res.ok) return [];
-    const text = await res.text();
+    const result = await get(latest.pathname, { access: 'private' });
+    if (!result || result.statusCode !== 200 || !result.stream) return [];
+    const reader = result.stream.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
     return JSON.parse(text);
   } catch (e) {
     console.error('readProducts error:', e);
@@ -37,6 +43,7 @@ async function writeProducts(data: any[]) {
   const result = await put(BLOB_KEY, JSON.stringify(data, null, 2), {
     access: 'private',
     contentType: 'application/json',
+    addRandomSuffix: true,
   });
   return result;
 }
