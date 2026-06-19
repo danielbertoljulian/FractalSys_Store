@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, BarChart3, Image as ImageIcon, LogOut, Plus, Search, ChevronDown, Trash2, Edit, Save, X, Share2, Check } from 'lucide-react';
+import { LayoutDashboard, Package, BarChart3, Image as ImageIcon, LogOut, Plus, Search, ChevronDown, Trash2, Edit, Save, X, Share2, Check, GripVertical } from 'lucide-react';
 import { getImageUrl } from '@/lib/imageProxy';
 
 const API = '/api/admin/products';
@@ -95,6 +95,37 @@ export default function AdminPage() {
       const r = await fetch(`${API}?id=${id}`, { method: 'DELETE' });
       if (!r.ok) throw new Error('Falha ao excluir');
       setSuccess('Produto excluído!');
+      fetchProducts();
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
+
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+  const handleDragStart = (idx: number) => { setDragIdx(idx); setDragOverIdx(null); };
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); };
+  const handleDragOverItem = (idx: number) => { setDragOverIdx(idx); };
+  const handleDragLeaveItem = () => { setDragOverIdx(null); };
+  const handleDragEnd = () => { setDragIdx(null); setDragOverIdx(null); };
+
+  const handleDrop = async (idx: number) => {
+    setDragOverIdx(null);
+    if (dragIdx === null || dragIdx === idx) { setDragIdx(null); return; }
+    const reordered = [...filteredProducts];
+    const [moved] = reordered.splice(dragIdx, 1);
+    reordered.splice(idx, 0, moved);
+    setDragIdx(null);
+    const orders = reordered.map((p, i) => ({ id: p.id, sortOrder: i + 1 }));
+    try {
+      const r = await fetch('/api/admin/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orders })
+      });
+      if (!r.ok) throw new Error('Falha ao reordenar');
+      setSuccess('Ordem atualizada!');
       fetchProducts();
     } catch (e: any) {
       setError(e.message);
@@ -254,14 +285,33 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredProducts.map((p) => (
-                  <div key={p.id} className="group bg-zinc-900/30 border border-zinc-800 hover:border-cyan-500/50 rounded-2xl overflow-hidden transition-all duration-300">
+                {filteredProducts.map((p, idx) => (
+                  <div
+                    key={p.id}
+                    draggable
+                    onDragStart={() => handleDragStart(idx)}
+                    onDragOver={(e) => { handleDragOver(e); handleDragOverItem(idx); }}
+                    onDragLeave={handleDragLeaveItem}
+                    onDrop={() => handleDrop(idx)}
+                    onDragEnd={handleDragEnd}
+                    className="group bg-zinc-900/30 border rounded-2xl overflow-hidden transition-all duration-300"
+                    style={{
+                      cursor: dragIdx !== null ? 'grabbing' : 'grab',
+                      opacity: dragIdx === idx ? 0.4 : 1,
+                      borderColor: dragIdx === idx ? '#7C3AED' : (dragOverIdx === idx ? '#06B6D4' : 'rgb(39 39 42)'),
+                      borderTop: dragOverIdx === idx ? '3px solid #06B6D4' : undefined,
+                      marginTop: dragOverIdx === idx ? '0.75rem' : undefined,
+                    }}
+                  >
                     <div className="aspect-square bg-zinc-800 relative group-hover:opacity-80 transition-opacity flex items-center justify-center p-4">
                       {p.image ? (
                         <img src={getImageUrl(p.image)} alt={p.name} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).src = '/products/placeholder.svg' }} />
                       ) : (
                         <ImageIcon size={48} className="text-zinc-700" />
                       )}
+                      <div className="absolute top-2 left-2 bg-black/60 text-zinc-400 rounded-lg p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <GripVertical size={14} />
+                      </div>
                     </div>
                     <div className="p-5">
                       <div className="flex justify-between items-start mb-1">
