@@ -68,6 +68,20 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+            <div className="mt-8">
+              <a
+                href="https://fractalsys.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <img 
+                  src="/images/POWERED_2_TRANSPARENCIA.png" 
+                  alt="Powered by FractalSyS" 
+                  className="w-[180px] h-auto"
+                />
+              </a>
+            </div>
           </div>
         </div>
 
