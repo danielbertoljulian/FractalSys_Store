@@ -1,13 +1,22 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useCartStore } from "@/store/cart-store"
 import { formatCurrency } from "@/lib/formatCurrency"
 
 export default function CartDrawer() {
+  const [mounted, setMounted] = useState(false)
   const { items, isOpen, closeCart, removeItem, updateQuantity, getTotal } =
     useCartStore()
+    
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
   const total = getTotal()
 
   return (

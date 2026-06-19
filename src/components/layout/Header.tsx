@@ -14,15 +14,18 @@ const orbitron = Orbitron({
 
 export default function Header() {
   const { getItemCount, openCart } = useCartStore()
-  const count = getItemCount()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const count = mounted ? getItemCount() : 0
 
   return (
     <header

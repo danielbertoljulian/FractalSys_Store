@@ -17,11 +17,6 @@ const pillars = [
     description: "Designs exclusivos criados pela FractalSyS. Arte que conecta a cultura tech ao streetwear.",
   },
   {
-    icon: "♻️",
-    title: "Sob Demanda",
-    description: "Produção sustentável. Cada peça é impressa sob encomenda, reduzindo desperdício.",
-  },
-  {
     icon: "🏆",
     title: "Qualidade Premium",
     description: "Camisetas 100% algodão penteado, moletons em fleece e estampas DTF de alta durabilidade.",
@@ -49,7 +44,7 @@ export default function BrandSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {pillars.map((pillar) => (
           <div
             key={pillar.title}
