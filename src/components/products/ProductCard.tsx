@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Orbitron } from "next/font/google"
 import type { Product } from "@/data/products"
 import { formatCurrency } from "@/lib/formatCurrency"
@@ -42,7 +41,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.price - product.promotionalPrice) / product.price) * 100)
     : null
 
-  const imgSrc = !imgError && product.images[0] ? getImageUrl(product.images[0]) : PLACEHOLDER
+  const imgSrc = product.images[0] && !imgError ? getImageUrl(product.images[0]) : PLACEHOLDER
 
   return (
     <Link
@@ -50,17 +49,17 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group relative rounded-2xl bg-zinc-900/40 border border-zinc-800 overflow-hidden transition-all duration-500 hover:border-cyan-500/40 hover:shadow-[0_0_40px_-8px_rgba(6,182,212,0.2)] hover:-translate-y-1"
     >
       <div className="relative aspect-square bg-zinc-800/50 overflow-hidden">
-        {product.images[0] || imgError ? (
-          <Image
-            src={imgSrc}
-            alt={product.name}
-            fill
-            onError={() => setImgError(true)}
-            className="object-contain p-4 group-hover:scale-105 transition-transform duration-700"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs font-mono">
-            [ Em Breve ]
+        <img
+          src={imgSrc}
+          alt={product.name}
+          onError={() => setImgError(true)}
+          className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 w-full h-full"
+        />
+
+        {/* Image count badge */}
+        {product.images.length > 1 && !imgError && (
+          <div className="absolute top-3 right-3 bg-black/60 text-zinc-400 text-[10px] font-mono px-2 py-0.5 rounded-full border border-zinc-700">
+            1/{product.images.length}
           </div>
         )}
 
