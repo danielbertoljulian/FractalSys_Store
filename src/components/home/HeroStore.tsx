@@ -37,7 +37,7 @@ export default function HeroStore() {
           Genesis
         </span>
 
-        <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1 mb-6">
+        <div className="flex flex-col items-center justify-center gap-x-3 gap-y-1 mb-6">
           <FuzzyText
             fontSize="clamp(1.1rem, 4.5vw, 3rem)"
             fontWeight={700}
@@ -46,7 +46,7 @@ export default function HeroStore() {
             enableHover
             color="#F8FAFC"
           >
-            TECNOLOGIA QUE
+            HARDWARE TÊXTIL PARA
           </FuzzyText>
           <FuzzyText
             fontSize="clamp(1.1rem, 4.5vw, 3rem)"
@@ -56,13 +56,18 @@ export default function HeroStore() {
             enableHover
             gradient={["#06B6D4", "#7C3AED"]}
           >
-            SE VESTE
+            MENTES DIGITAIS
           </FuzzyText>
         </div>
 
-        <p className="max-w-xl text-zinc-400 text-sm md:text-base leading-relaxed mb-10">
-          Arte digital, fractais e inteligência artificial traduzidos em peças premium sob demanda.
-        </p>
+        <div className="max-w-2xl space-y-4 mb-10">
+          <p className="text-zinc-300 text-sm md:text-lg font-medium leading-relaxed">
+            Peças criadas para programadores, criadores, hackers, builders e exploradores do impossível.
+          </p>
+          <p className="text-zinc-500 text-[13px] md:text-base leading-relaxed">
+            A FractalSyS Store une arte generativa, estética cyberpunk e moda techwear em produtos premium para quem vive entre código, IA e futuro.
+          </p>
+        </div>
 
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link
