@@ -45,11 +45,11 @@ export default function BrandSection() {
             key={pillar.title}
             className="group p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-cyan-500/30 hover:bg-zinc-900/60 transition-all duration-300 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.2)] flex flex-col items-center text-center"
           >
-            <div className="h-32 w-32 mb-8 flex items-center justify-center">
+            <div className="h-32 w-32 mb-8 flex items-center justify-center overflow-visible">
               <img 
                 src={pillar.icon} 
                 alt={pillar.title} 
-                className="max-h-full max-w-full object-contain brightness-110" 
+                className="max-h-full max-w-full object-contain brightness-110 transform transition-transform duration-500 group-hover:scale-150" 
               />
             </div>
             <h3 className={`text-lg font-semibold text-zinc-200 mb-3 group-hover:text-white transition-colors ${orbitron.className}`}>
