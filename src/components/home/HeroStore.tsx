@@ -29,7 +29,7 @@ export default function HeroStore() {
             alt="Hero Background"
             width={1200}
             height={600}
-            className="object-contain max-h-[78vh] w-auto opacity-80"
+            className="object-contain max-h-[78vh] w-auto"
             style={{ 
               maskImage: 'radial-gradient(circle, black 25%, transparent 75%)',
               WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 75%)'
