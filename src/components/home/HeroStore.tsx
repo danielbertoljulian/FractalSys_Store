@@ -21,29 +21,29 @@ export default function HeroStore() {
       </div>
 
       {/* Hero logo with audio-reactive fuzzy effect and background image */}
-      <div className="relative w-full max-w-[min(95vw,1100px)] mx-auto px-2 md:px-6 mb-8 flex items-center justify-center">
+      <div className="relative w-full max-w-[1400px] mx-auto px-4 md:px-10 mb-2 flex items-center justify-center">
         {/* Background Image Layer */}
-        <div className="absolute inset-0 flex items-center justify-center blur-[1px] scale-110 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center blur-[1px] scale-105 pointer-events-none">
           <Image
             src="/images/HERO_WIDE_1.png"
             alt="Hero Background"
             width={1200}
             height={600}
-            className="object-contain max-h-[70vh] w-auto opacity-90"
+            className="object-contain max-h-[75vh] w-auto opacity-90"
             style={{ 
-              maskImage: 'radial-gradient(circle, black 30%, transparent 85%)',
-              WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 85%)'
+              maskImage: 'radial-gradient(circle, black 25%, transparent 75%)',
+              WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 75%)'
             }}
           />
         </div>
 
-        {/* Foreground Active Hero - Restaurado posicionamento anterior */}
-        <div className="relative z-10 transform -translate-y-12 md:-translate-y-16">
+        {/* Foreground Active Hero - Reduzido 50% para 275px */}
+        <div className="relative z-10 transform -translate-y-16 md:-translate-y-24">
           <AudioReactiveHero
             src="/FRACTALSYS_4K_TRANSP.png"
             alt="FractalSyS Wear"
-            width={550}
-            height={225}
+            width={275}
+            height={115}
             className="mx-auto"
           />
         </div>
