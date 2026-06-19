@@ -3,19 +3,6 @@ import { NextResponse } from 'next/server';
 
 const BLOB_KEY = 'store/admin-products.json';
 
-async function streamToString(stream: ReadableStream<Uint8Array>): Promise<string> {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let text = '';
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    text += decoder.decode(value, { stream: true });
-  }
-  text += decoder.decode();
-  return text;
-}
-
 async function readProducts(): Promise<any[]> {
   try {
     const { blobs } = await list({ prefix: 'store/admin-products' });
