@@ -78,12 +78,12 @@ export default async function Home() {
     <div className="relative min-h-screen">
       <Galaxy
         hueShift={180}
-        density={0.4}
-        saturation={0.6}
-        glowIntensity={0.4}
-        twinkleIntensity={0.5}
-        rotationSpeed={0.03}
-        repulsionStrength={2.5}
+        density={0.2}
+        saturation={0.4}
+        glowIntensity={0.3}
+        twinkleIntensity={0.4}
+        rotationSpeed={0.01}
+        repulsionStrength={1.5}
         transparent={true}
       />
 

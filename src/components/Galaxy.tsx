@@ -89,38 +89,41 @@ vec3 StarLayer(vec2 uv) {
   vec2 gv = fract(uv) - 0.5; 
   vec2 id = floor(uv);
 
-  for (int y = -1; y <= 1; y++) {
-    for (int x = -1; x <= 1; x++) {
-      vec2 offset = vec2(float(x), float(y));
-      vec2 si = id + vec2(float(x), float(y));
-      float seed = Hash21(si);
-      float size = fract(seed * 345.32);
-      float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
-      float flareSize = smoothstep(0.9, 1.0, size) * glossLocal;
+    for (int y = -1; y <= 1; y++) {
+      for (int x = -1; x <= 1; x++) {
+        vec2 offset = vec2(float(x), float(y));
+        vec2 si = id + offset;
+        float seed = Hash21(si);
+        
+        // Redução drástica da densidade de estrelas (ajustada pelo uDensity)
+        if (seed > 0.15 * uDensity) continue; 
 
-      float red = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 1.0)) + STAR_COLOR_CUTOFF;
-      float blu = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 3.0)) + STAR_COLOR_CUTOFF;
-      float grn = min(red, blu) * seed;
-      vec3 base = vec3(red, grn, blu);
-      
-      float hue = atan(base.g - base.r, base.b - base.r) / (2.0 * 3.14159) + 0.5;
-      hue = fract(hue + uHueShift / 360.0);
-      float sat = length(base - vec3(dot(base, vec3(0.299, 0.587, 0.114)))) * uSaturation;
-      float val = max(max(base.r, base.g), base.b);
-      base = hsv2rgb(vec3(hue, sat, val));
+        float size = fract(seed * 345.32);
+        float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
+        float flareSize = smoothstep(0.92, 1.0, size) * glossLocal;
 
-      vec2 pad = vec2(tris(seed * 34.0 + uTime * uSpeed / 10.0), tris(seed * 38.0 + uTime * uSpeed / 30.0)) - 0.5;
+        float red = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 1.0)) + STAR_COLOR_CUTOFF;
+        float blu = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 3.0)) + STAR_COLOR_CUTOFF;
+        float grn = min(red, blu) * seed;
+        vec3 base = vec3(red, grn, blu);
+        
+        float hue = atan(base.g - base.r, base.b - base.r) / (2.0 * 3.14159) + 0.5;
+        hue = fract(hue + uHueShift / 360.0);
+        float sat = length(base - vec3(dot(base, vec3(0.299, 0.587, 0.114)))) * uSaturation;
+        float val = max(max(base.r, base.g), base.b);
+        base = hsv2rgb(vec3(hue, sat, val));
 
-      float star = Star(gv - offset - pad, flareSize);
-      vec3 color = base;
+        // Removido movimento aleatório pad para manter trajetória linear
+        float star = Star(gv - offset, flareSize);
+        vec3 color = base;
 
-      float twinkle = trisn(uTime * uSpeed + seed * 6.2831) * 0.5 + 1.0;
-      twinkle = mix(1.0, twinkle, uTwinkleIntensity);
-      star *= twinkle;
-      
-      col += star * size * color;
+        float twinkle = trisn(uTime * uSpeed + seed * 6.2831) * 0.5 + 1.0;
+        twinkle = mix(1.0, twinkle, uTwinkleIntensity);
+        star *= twinkle;
+        
+        col += star * size * color;
+      }
     }
-  }
 
   return col;
 }
@@ -155,9 +158,9 @@ void main() {
   vec3 col = vec3(0.0);
 
   for (float i = 0.0; i < 1.0; i += 1.0 / NUM_LAYER) {
-    float depth = fract(i + uStarSpeed * uSpeed);
-    float scale = mix(20.0 * uDensity, 0.5 * uDensity, depth);
-    float fade = depth * smoothstep(1.0, 0.9, depth);
+    float depth = fract(i + uTime * uSpeed * 0.1); // Movimento progressivo no tempo
+    float scale = mix(15.0, 0.1, depth); // Efeito de vinda em direção à câmera
+    float fade = depth * smoothstep(1.0, 0.8, depth);
     col += StarLayer(uv * scale + i * 453.32) * fade;
   }
 
@@ -206,7 +209,7 @@ export default function Galaxy({
   mouseRepulsion = true,
   repulsionStrength = 2,
   twinkleIntensity = 0.3,
-  rotationSpeed = 0.1,
+  rotationSpeed = 0.01,
   autoCenterRepulsion = 0,
   transparent = true,
   ...rest
