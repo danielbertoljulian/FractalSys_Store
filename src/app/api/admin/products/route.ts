@@ -1,104 +1,99 @@
-import { put, get, list } from '@vercel/blob';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { products } from '@/lib/schema'
+import { eq, desc } from 'drizzle-orm'
 
-const BLOB_KEY = 'store/admin-products.json';
-
-async function readProducts(): Promise<any[]> {
-  try {
-    const { blobs } = await list({ prefix: 'store/admin-products' });
-    if (blobs.length === 0) return [];
-    const latest = blobs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())[0];
-    const result = await get(latest.pathname, { access: 'private' });
-    if (!result || result.statusCode !== 200 || !result.stream) return [];
-    const reader = result.stream.getReader();
-    const decoder = new TextDecoder();
-    let text = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      text += decoder.decode(value, { stream: true });
-    }
-    text += decoder.decode();
-    return JSON.parse(text);
-  } catch (e) {
-    console.error('readProducts error:', e);
-    return [];
+function requireDb() {
+  if (!db) {
+    throw new Error('Database not configured. Set DATABASE_URL environment variable.')
   }
-}
-
-async function writeProducts(data: any[]) {
-  const result = await put(BLOB_KEY, JSON.stringify(data, null, 2), {
-    access: 'private',
-    contentType: 'application/json',
-    addRandomSuffix: true,
-  });
-  return result;
+  return db
 }
 
 export async function GET() {
   try {
-    const data = await readProducts();
-    return NextResponse.json(data);
+    const data = await requireDb().select().from(products).orderBy(desc(products.sortOrder), desc(products.id))
+    return NextResponse.json(data)
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    console.error('API Error (GET):', e);
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const products = await readProducts();
-    const newProduct = {
-      id: Date.now(),
-      ...body,
-      images: typeof body.images === 'string' ? JSON.parse(body.images) : (body.images || []),
-      createdAt: new Date().toISOString(),
-    };
-    products.push(newProduct);
-    const writeResult = await writeProducts(products);
-    return NextResponse.json({ ...newProduct, blobPath: writeResult.pathname }, { status: 201 });
+    const body = await req.json()
+    const { name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured, isActive } = body
+    if (!name) return NextResponse.json({ error: 'name is required' }, { status: 400 })
+
+    const slugValue = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const inserted = await requireDb().insert(products).values({
+      name,
+      slug: slugValue,
+      description,
+      brand,
+      categories,
+      width,
+      height,
+      depth,
+      colors,
+      price,
+      off: off || 0,
+      image,
+      images: typeof images === 'string' ? images : JSON.stringify(images || []),
+      isFeatured: !!isFeatured,
+      isActive: isActive !== false,
+    }).returning()
+
+    return NextResponse.json(inserted[0], { status: 201 })
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    console.error('API Error (POST):', e);
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
 
 export async function PUT(req: Request) {
   try {
-    const body = await req.json();
-    const { id } = body;
-    if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
+    const body = await req.json()
+    const { id, name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured, isActive } = body
+    if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
-    const products = await readProducts();
-    const idx = products.findIndex((p: any) => p.id === id || p.id === Number(id));
-    if (idx === -1) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    const updated = await requireDb().update(products).set({
+      name,
+      slug,
+      description,
+      brand,
+      categories,
+      width,
+      height,
+      depth,
+      colors,
+      price,
+      off: off || 0,
+      image,
+      images: typeof images === 'string' ? images : JSON.stringify(images || []),
+      isFeatured: !!isFeatured,
+      isActive: isActive !== false,
+    }).where(eq(products.id, Number(id))).returning()
 
-    products[idx] = {
-      ...products[idx],
-      ...body,
-      images: typeof body.images === 'string' ? JSON.parse(body.images) : (body.images || products[idx].images || []),
-      updatedAt: new Date().toISOString(),
-    };
-    await writeProducts(products);
-    return NextResponse.json(products[idx]);
+    if (updated.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json(updated[0])
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    console.error('API Error (PUT):', e);
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
 
 export async function DELETE(req: Request) {
   try {
-    const url = new URL(req.url);
-    const id = url.searchParams.get('id');
-    if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
+    const url = new URL(req.url)
+    const id = url.searchParams.get('id')
+    if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
-    const products = await readProducts();
-    const filtered = products.filter((p: any) => p.id !== id && p.id !== Number(id));
-    if (filtered.length === products.length) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-    }
-    const writeResult = await writeProducts(filtered);
-    return NextResponse.json({ ok: true, pathname: writeResult.pathname });
+    await requireDb().delete(products).where(eq(products.id, Number(id)))
+    return NextResponse.json({ ok: true })
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    console.error('API Error (DELETE):', e);
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
