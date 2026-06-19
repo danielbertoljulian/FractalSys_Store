@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import { products as productsTable } from "@/lib/schema"
 import { eq } from "drizzle-orm"
 import { products as staticProducts } from "@/data/products"
+import { parseBrPrice } from "@/lib/formatCurrency"
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 
@@ -40,14 +41,14 @@ async function getProduct(slug: string) {
     return {
       ...p,
       id: p.id.toString(),
+      description: p.description || "",
       images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
-      price: parseFloat(p.price || "0"),
-      promotionalPrice: p.off ? (parseFloat(p.price || "0") * (1 - p.off / 100)) : undefined,
+      price: parseBrPrice(p.price),
+      promotionalPrice: p.off ? (parseBrPrice(p.price) * (1 - p.off / 100)) : undefined,
       sizes: ["P", "M", "G", "GG", "XG"],
-      colors: (p.colors || "").split(", "),
+      colors: (p.colors || "").split(", ").filter(Boolean),
       category: p.categories || "Geral",
-      collection: p.brand || "",
-      description: p.description || ""
+      collection: p.brand || ""
     }
   } catch {
     return staticProducts.find((p) => p.slug === slug);

@@ -4,3 +4,7 @@ export function formatCurrency(value: number): string {
     currency: "BRL",
   })
 }
+
+export function parseBrPrice(value: string | null | undefined): number {
+  return parseFloat((value || "0").replace(/\./g, "").replace(",", "."))
+}
