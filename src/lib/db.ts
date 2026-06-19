@@ -4,5 +4,9 @@ import * as schema from './schema';
 
 neonConfig.fetchConnectionCache = true;
 
-const sql = neon(process.env.DATABASE_URL!);
+if (!process.env.DATABASE_URL) {
+  console.warn("⚠️ DATABASE_URL não encontrada! O banco de dados não funcionará.");
+}
+
+const sql = neon(process.env.DATABASE_URL || "");
 export const db = drizzle(sql, { schema });
