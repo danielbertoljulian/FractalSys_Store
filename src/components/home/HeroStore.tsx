@@ -49,12 +49,8 @@ export default function HeroStore() {
         </div>
       </div>
 
-      {/* Text content */}
-      <div className={`relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
-        <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-cyan-500/60 mb-4 font-bold">
-          Genesis
-        </span>
-
+      {/* Text content - Adicionado mt-12 para descer o bloco */}
+      <div className={`relative z-10 mt-12 md:mt-20 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
         <div className="max-w-xl mb-10">
           <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
             Para exploradores do impossível.
