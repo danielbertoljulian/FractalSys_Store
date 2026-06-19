@@ -57,32 +57,29 @@ export default function HeroStore() {
 
         <div className="flex flex-col items-center justify-center gap-x-3 gap-y-1 mb-6">
           <FuzzyText
-            fontSize="clamp(1rem, 3.5vw, 2.2rem)"
+            fontSize="clamp(1.2rem, 4vw, 2.8rem)"
             fontWeight={700}
             baseIntensity={0.03}
             hoverIntensity={0.05}
             enableHover
             color="#F8FAFC"
           >
-            VISTA O FUTURO.
+            FRACTALSYS
           </FuzzyText>
           <FuzzyText
-            fontSize="clamp(1rem, 3.5vw, 2.2rem)"
+            fontSize="clamp(1.2rem, 4vw, 2.8rem)"
             fontWeight={700}
             baseIntensity={0.03}
             hoverIntensity={0.05}
             enableHover
             gradient={["#06B6D4", "#7C3AED"]}
           >
-            USE FRACTALSYS.
+            STORE
           </FuzzyText>
         </div>
 
-        <div className="max-w-xl space-y-4 mb-10">
-          <p className="text-zinc-300 text-xs md:text-base font-medium leading-relaxed">
-            Roupas techwear premium com estética cyberpunk, design minimalista e presença digital.
-          </p>
-          <p className="text-zinc-500 text-[11px] md:text-sm leading-relaxed">
+        <div className="max-w-xl mb-10">
+          <p className="text-zinc-300 text-sm md:text-lg font-medium tracking-[0.1em] uppercase">
             Para exploradores do impossível.
           </p>
         </div>
