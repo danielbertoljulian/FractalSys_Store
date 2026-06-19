@@ -49,8 +49,8 @@ export default function HeroStore() {
         </div>
       </div>
 
-      {/* Text content - Adicionado mt-12 para descer o bloco */}
-      <div className={`relative z-10 mt-12 md:mt-20 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
+      {/* Text content - Bloco movido ainda mais para baixo */}
+      <div className={`relative z-10 mt-24 md:mt-32 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
         <div className="max-w-xl mb-10">
           <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
             Para exploradores do impossível.
