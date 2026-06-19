@@ -20,26 +20,40 @@ export default function HeroStore() {
         <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-violet-600/5 rounded-full blur-[120px]" />
       </div>
 
-      {/* Hero logo with audio-reactive fuzzy effect */}
-      <div className="relative w-full max-w-[min(95vw,1100px)] mx-auto px-2 md:px-6 mb-2">
-        <AudioReactiveHero
-          src="/FRACTALSYS_4K_TRANSP.png"
-          alt="FractalSyS Wear"
-          width={550}
-          height={225}
-          className="mx-auto"
-        />
+      {/* Hero logo with audio-reactive fuzzy effect and background image */}
+      <div className="relative w-full max-w-[min(95vw,1100px)] mx-auto px-2 md:px-6 mb-8 flex items-center justify-center">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 flex items-center justify-center blur-[1px] scale-110 pointer-events-none">
+          <Image
+            src="/images/HERO_SQ_2.png"
+            alt="Hero Background"
+            width={750}
+            height={750}
+            className="object-contain max-h-[65vh] w-auto"
+          />
+        </div>
+
+        {/* Foreground Active Hero - Movido para cima com translate-y-[-2rem] */}
+        <div className="relative z-10 transform -translate-y-12 md:-translate-y-16">
+          <AudioReactiveHero
+            src="/FRACTALSYS_4K_TRANSP.png"
+            alt="FractalSyS Wear"
+            width={550}
+            height={225}
+            className="mx-auto"
+          />
+        </div>
       </div>
 
       {/* Text content */}
       <div className={`relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
-        <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-cyan-500/60 mb-4 font-bold">
+        <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-cyan-500/60 mb-4 font-bold">
           Genesis
         </span>
 
         <div className="flex flex-col items-center justify-center gap-x-3 gap-y-1 mb-6">
           <FuzzyText
-            fontSize="clamp(1.1rem, 4.5vw, 3rem)"
+            fontSize="clamp(1rem, 3.5vw, 2.2rem)"
             fontWeight={700}
             baseIntensity={0.03}
             hoverIntensity={0.05}
@@ -49,7 +63,7 @@ export default function HeroStore() {
             HARDWARE TÊXTIL PARA
           </FuzzyText>
           <FuzzyText
-            fontSize="clamp(1.1rem, 4.5vw, 3rem)"
+            fontSize="clamp(1rem, 3.5vw, 2.2rem)"
             fontWeight={700}
             baseIntensity={0.03}
             hoverIntensity={0.05}
@@ -60,11 +74,11 @@ export default function HeroStore() {
           </FuzzyText>
         </div>
 
-        <div className="max-w-2xl space-y-4 mb-10">
-          <p className="text-zinc-300 text-sm md:text-lg font-medium leading-relaxed">
+        <div className="max-w-xl space-y-4 mb-10">
+          <p className="text-zinc-300 text-xs md:text-base font-medium leading-relaxed">
             Peças criadas para programadores, criadores, hackers, builders e exploradores do impossível.
           </p>
-          <p className="text-zinc-500 text-[13px] md:text-base leading-relaxed">
+          <p className="text-zinc-500 text-[11px] md:text-sm leading-relaxed">
             A FractalSyS Store une arte generativa, estética cyberpunk e moda techwear em produtos premium para quem vive entre código, IA e futuro.
           </p>
         </div>
