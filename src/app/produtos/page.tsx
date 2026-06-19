@@ -27,18 +27,30 @@ async function getProducts(category: string) {
     
     const fetched = await query.orderBy(desc(productsTable.sortOrder), desc(productsTable.id))
 
-    return fetched.map(p => ({
-      ...p,
-      id: p.id.toString(),
-      description: p.description || "",
-      images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
-      price: parseBrPrice(p.price),
-      promotionalPrice: p.off ? (parseBrPrice(p.price) * (1 - p.off / 100)) : undefined,
-      sizes: ["P", "M", "G", "GG", "XG"],
-      colors: (p.colors || "").split(", ").filter(Boolean),
-      category: p.categories || "Geral",
-      collection: p.brand || ""
-    }))
+    return fetched.map(p => {
+      let gallery = [];
+      try {
+        gallery = typeof p.images === 'string' ? JSON.parse(p.images) : (Array.isArray(p.images) ? p.images : []);
+      } catch (e) {
+        gallery = [];
+      }
+      if (p.image && !gallery.includes(p.image)) {
+        gallery = [p.image, ...gallery];
+      }
+
+      return {
+        ...p,
+        id: p.id.toString(),
+        description: p.description || "",
+        images: gallery,
+        price: parseBrPrice(p.price),
+        promotionalPrice: p.off ? (parseBrPrice(p.price) * (1 - p.off / 100)) : undefined,
+        sizes: ["P", "M", "G", "GG", "XG"],
+        colors: (p.colors || "").split(", ").filter(Boolean),
+        category: p.categories || "Geral",
+        collection: p.brand || ""
+      }
+    })
   } catch (error) {
     console.error("Error fetching products:", error)
     return staticProducts.filter(p => p.isActive);

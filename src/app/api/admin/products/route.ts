@@ -36,10 +36,10 @@ export async function POST(req: Request) {
       width: width || null,
       height: height || null,
       depth: depth || null,
-      colors: colors || null,
-      price: price || "0",
+      colors: typeof colors === 'string' ? colors : (Array.isArray(colors) ? colors.join(", ") : null),
+      price: price?.toString() || "0",
       off: Number(off) || 0,
-      image: image || null,
+      image,
       images: typeof images === 'string' ? images : JSON.stringify(images || []),
       isFeatured: !!isFeatured,
       isActive: isActive !== false,
@@ -60,6 +60,9 @@ export async function PUT(req: Request) {
     if (!name) return NextResponse.json({ error: 'name is required' }, { status: 400 })
     if (!slug) return NextResponse.json({ error: 'slug is required' }, { status: 400 })
 
+    const targetId = Number(id);
+    if (isNaN(targetId)) return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+
     const updated = await requireDb().update(products).set({
       name,
       slug,
@@ -69,16 +72,16 @@ export async function PUT(req: Request) {
       width: width || null,
       height: height || null,
       depth: depth || null,
-      colors: colors || null,
-      price: price || "0",
+      colors: typeof colors === 'string' ? colors : (Array.isArray(colors) ? colors.join(", ") : null),
+      price: price?.toString() || "0",
       off: Number(off) || 0,
-      image: image || null,
+      image,
       images: typeof images === 'string' ? images : JSON.stringify(images || []),
       isFeatured: !!isFeatured,
       isActive: isActive !== false,
-    }).where(eq(products.id, Number(id))).returning()
+    }).where(eq(products.id, targetId)).returning()
 
-    if (updated.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (updated.length === 0) return NextResponse.json({ error: 'Product not found in database' }, { status: 404 })
     return NextResponse.json(updated[0])
   } catch (e: any) {
     console.error('API Error (PUT):', e);

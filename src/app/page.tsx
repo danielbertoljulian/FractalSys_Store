@@ -15,11 +15,23 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 export const revalidate = 60
 
 function mapDbProduct(p: any) {
+  let gallery = [];
+  try {
+    gallery = typeof p.images === 'string' ? JSON.parse(p.images) : (Array.isArray(p.images) ? p.images : []);
+  } catch (e) {
+    gallery = [];
+  }
+  
+  // Garantir que a imagem principal esteja na galeria se não estiver lá
+  if (p.image && !gallery.includes(p.image)) {
+    gallery = [p.image, ...gallery];
+  }
+
   return {
     ...p,
     id: p.id.toString(),
     description: p.description || "",
-    images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
+    images: gallery,
     price: parseBrPrice(p.price),
     promotionalPrice: p.off ? (parseBrPrice(p.price) * (1 - p.off / 100)) : undefined,
     sizes: ["P", "M", "G", "GG", "XG"],

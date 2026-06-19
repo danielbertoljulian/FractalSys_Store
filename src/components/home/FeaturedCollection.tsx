@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Orbitron } from "next/font/google"
 import type { Product } from "@/data/products"
@@ -20,6 +21,14 @@ export default function FeaturedCollection({
   collectionSlug,
   description,
 }: FeaturedCollectionProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <div className="py-20" />
+
   return (
     <section className="max-w-7xl mx-auto w-full px-4 md:px-6 py-20 md:py-28">
       {/* Section header */}

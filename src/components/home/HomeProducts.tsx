@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Orbitron } from "next/font/google"
 import Link from "next/link"
 import type { Product } from "@/data/products"
@@ -22,6 +22,13 @@ interface HomeProductsProps {
 
 export default function HomeProducts({ products }: HomeProductsProps) {
   const [filter, setFilter] = useState("todas")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <div className="py-20" />
 
   const filtered = filter === "todas"
     ? products

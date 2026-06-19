@@ -37,12 +37,21 @@ async function getProduct(slug: string) {
     }
 
     const p = productData[0]
+    let gallery = [];
+    try {
+      gallery = typeof p.images === 'string' ? JSON.parse(p.images) : (Array.isArray(p.images) ? p.images : []);
+    } catch (e) {
+      gallery = [];
+    }
+    if (p.image && !gallery.includes(p.image)) {
+      gallery = [p.image, ...gallery];
+    }
     
     return {
       ...p,
       id: p.id.toString(),
       description: p.description || "",
-      images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
+      images: gallery,
       price: parseBrPrice(p.price),
       promotionalPrice: p.off ? (parseBrPrice(p.price) * (1 - p.off / 100)) : undefined,
       sizes: ["P", "M", "G", "GG", "XG"],

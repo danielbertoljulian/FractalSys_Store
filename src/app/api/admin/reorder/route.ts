@@ -5,25 +5,26 @@ import { eq } from 'drizzle-orm'
 
 export async function POST(req: Request) {
   try {
-    if (!db) throw new Error('Database not configured')
-
-    const body = await req.json()
-    const { orders } = body
-
-    if (!Array.isArray(orders) || orders.length === 0) {
-      return NextResponse.json({ error: 'orders array is required' }, { status: 400 })
+    const { orders } = await req.json()
+    if (!orders || !Array.isArray(orders)) {
+      return NextResponse.json({ error: 'Orders array required' }, { status: 400 })
     }
 
-    for (const item of orders) {
-      if (!item.id || typeof item.sortOrder !== 'number') continue
-      await db.update(products)
-        .set({ sortOrder: item.sortOrder })
-        .where(eq(products.id, Number(item.id)))
-    }
+    if (!db) throw new Error('Database not connected')
+    const database = db;
+
+    // Executa as atualizações em sequência ou paralelo
+    await Promise.all(
+      orders.map((item: { id: number | string, sortOrder: number }) => 
+        database.update(products)
+          .set({ sortOrder: item.sortOrder })
+          .where(eq(products.id, Number(item.id)))
+      )
+    )
 
     return NextResponse.json({ ok: true })
   } catch (e: any) {
-    console.error('Reorder API Error:', e)
+    console.error('Reorder Error:', e)
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
