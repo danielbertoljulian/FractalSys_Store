@@ -29,7 +29,7 @@ export default function HeroStore() {
             alt="Hero Background"
             width={1200}
             height={600}
-            className="object-contain max-h-[78vh] w-auto"
+            className="object-contain max-h-[85vh] w-auto"
             style={{ 
               maskImage: 'radial-gradient(circle, black 25%, transparent 75%)',
               WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 75%)'
@@ -37,13 +37,13 @@ export default function HeroStore() {
           />
         </div>
 
-        {/* Foreground Active Hero - Aumentado 30% para 360px */}
-        <div className="relative z-10 transform -translate-y-12 md:-translate-y-20">
+        {/* Foreground Active Hero - Aumentado 50% para 540px */}
+        <div className="relative z-10 transform -translate-y-8 md:-translate-y-16">
           <AudioReactiveHero
             src="/FRACTALSYS_4K_TRANSP.png"
             alt="FractalSyS Wear"
-            width={360}
-            height={150}
+            width={540}
+            height={225}
             className="mx-auto"
           />
         </div>

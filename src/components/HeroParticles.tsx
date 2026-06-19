@@ -41,8 +41,8 @@ export default function HeroParticles() {
     };
 
     const groups = [
-      { pct: 0.036, count: 4, speed: 4.0, lineColor: "6, 182, 212", delay: 0 },
-      { pct: 0.075, count: 6, speed: 4.0, lineColor: "255, 0, 255", delay: 70 },
+      { pct: 0.054, count: 4, speed: 4.0, lineColor: "6, 182, 212", delay: 0 },
+      { pct: 0.112, count: 6, speed: 4.0, lineColor: "255, 0, 255", delay: 70 },
     ];
 
     const particles: { nodes: Particle[]; maxRadius: number; pct: number; lineColor: string; delay: number; active: boolean }[] = [];
