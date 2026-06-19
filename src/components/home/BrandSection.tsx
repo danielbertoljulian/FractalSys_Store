@@ -45,7 +45,7 @@ export default function BrandSection() {
             key={pillar.title}
             className="group p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-cyan-500/30 hover:bg-zinc-900/60 transition-all duration-300 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.2)] flex flex-col items-center text-center"
           >
-            <div className="h-16 w-16 mb-6 flex items-center justify-center">
+            <div className="h-32 w-32 mb-8 flex items-center justify-center">
               <img 
                 src={pillar.icon} 
                 alt={pillar.title} 
