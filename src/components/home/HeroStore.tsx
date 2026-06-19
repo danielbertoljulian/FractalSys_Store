@@ -4,7 +4,6 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import Image from "next/image"
 import { Orbitron } from "next/font/google"
-import AudioControls from "@/components/AudioControls"
 import FuzzyText from "@/components/FuzzyText"
 import { getWhatsAppUrl } from "@/lib/whatsapp"
 
@@ -82,10 +81,6 @@ export default function HeroStore() {
           </a>
         </div>
 
-        {/* Audio controls */}
-        <div className="mt-2">
-          <AudioControls />
-        </div>
       </div>
 
       {/* Bottom gradient fade */}
