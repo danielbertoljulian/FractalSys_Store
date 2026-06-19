@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #F8FAFC;
+  --accent-cyan: #06B6D4;
+  --accent-violet: #7C3AED;
+  --surface: #1E293B;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-violet: var(--accent-violet);
+  --color-surface: var(--surface);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── Galaxy background is fixed ── */
+.galaxy-container {
+  position: fixed !important;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Glow pulses ── */
+@keyframes glow-pulse-cyan {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.45), 0 0 20px rgba(6, 182, 212, 0.35);
+    text-shadow: 0 0 8px rgba(6, 182, 212, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.75), 0 0 40px rgba(6, 182, 212, 0.55);
+    text-shadow: 0 0 18px rgba(6, 182, 212, 0.85);
+  }
+}
+
+@keyframes glow-pulse-violet {
+  0%, 100% { box-shadow: 0 0 10px rgba(124, 58, 237, 0.45), 0 0 20px rgba(124, 58, 237, 0.35); }
+  50% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.75), 0 0 40px rgba(124, 58, 237, 0.55); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoom-in-95 {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Utility classes ── */
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-in { animation: zoom-in-95 0.2s ease-out forwards; }
+.fade-in { animation-name: fadeIn; }
+.slide-in-from-top-4 { animation-name: slideInFromTop; }
+.zoom-in-95 { animation-name: zoom-in-95; }
+
+/* ── Scrollbar ── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
+
+/* ── Glass card effect ── */
+.glass-card {
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── Holographic shimmer for product cards ── */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #06B6D4, #7C3AED, #06B6D4);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ── Input / Select reset ── */
+input, select, textarea, button {
+  font-family: inherit;
+}
+
+/* ── Range slider cyan accent ── */
+input[type="range"] {
+  accent-color: #06B6D4;
+}
+
+/* ── Selection color ── */
+::selection {
+  background: rgba(6, 182, 212, 0.3);
+  color: #fff;
+}
