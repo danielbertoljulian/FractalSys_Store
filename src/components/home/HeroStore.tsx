@@ -66,7 +66,7 @@ export default function HeroStore() {
 
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link
-            href="/colecoes/genesis-drop-01"
+            href="/produtos"
             className={`px-8 py-3 rounded-full border border-cyan-400/70 text-cyan-200 hover:border-cyan-300 hover:bg-cyan-500/10 transition-all text-xs tracking-[0.15em] uppercase shadow-[0_0_16px_rgba(6,182,212,0.3)] animate-[glow-pulse-cyan_2.2s_ease-in-out_infinite]`}
           >
             Ver Coleção

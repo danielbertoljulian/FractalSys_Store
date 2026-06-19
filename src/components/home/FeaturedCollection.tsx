@@ -47,10 +47,10 @@ export default function FeaturedCollection({
         <div className="mt-6 flex items-center justify-center gap-3">
           <div className="h-px w-16 bg-gradient-to-r from-transparent to-cyan-500/50" />
           <Link
-            href={`/colecoes/${collectionSlug}`}
+            href="/produtos"
             className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-4 tracking-wide"
           >
-            Ver toda a coleção →
+            Ver catálogo completo →
           </Link>
           <div className="h-px w-16 bg-gradient-to-l from-transparent to-cyan-500/50" />
         </div>

@@ -53,7 +53,7 @@ export default function Header() {
         <nav className="hidden md:flex gap-6 text-sm text-zinc-400 items-center">
           <Link href="/" className="hover:text-cyan-400 transition-colors tracking-wide">Início</Link>
           <Link href="/produtos" className="hover:text-cyan-400 transition-colors tracking-wide">Produtos</Link>
-          <Link href="/colecoes/genesis" className="hover:text-cyan-400 transition-colors tracking-wide">Genesis</Link>
+          <Link href="/produtos" className="hover:text-cyan-400 transition-colors tracking-wide">Catálogo</Link>
           <Link href="/sobre" className="hover:text-cyan-400 transition-colors tracking-wide">Sobre</Link>
           <Link href="/admin" className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-400 transition-colors font-mono border border-zinc-800 rounded px-2 py-1">Admin</Link>
         </nav>
