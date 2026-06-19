@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, BarChart3, Image as ImageIcon, LogOut, Plus, Search, ChevronDown, Trash2, Edit, Save, X, Share2, Check } from 'lucide-react';
 
-const API = '/api/products';
+const API = '/api/admin/products';
 const PWD_KEY = 'fs_admin_pwd';
 const CATEGORY_OPTIONS = ['Camisetas', 'Moletons', 'Acessórios', 'Oversized'];
 

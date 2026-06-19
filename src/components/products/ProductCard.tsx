@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Orbitron } from "next/font/google"
@@ -9,11 +10,14 @@ import { useCartStore } from "@/store/cart-store"
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["500", "600", "700"] })
 
+const PLACEHOLDER = "/products/placeholder.svg"
+
 interface ProductCardProps {
   product: Product
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [imgError, setImgError] = useState(false)
   const addItem = useCartStore((s) => s.addItem)
   const openCart = useCartStore((s) => s.openCart)
 
@@ -37,18 +41,20 @@ export default function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.price - product.promotionalPrice) / product.price) * 100)
     : null
 
+  const imgSrc = !imgError && product.images[0] ? product.images[0] : PLACEHOLDER
+
   return (
     <Link
       href={`/produto/${product.slug}`}
       className="group relative rounded-2xl bg-zinc-900/40 border border-zinc-800 overflow-hidden transition-all duration-500 hover:border-cyan-500/40 hover:shadow-[0_0_40px_-8px_rgba(6,182,212,0.2)] hover:-translate-y-1"
     >
-      {/* Image */}
       <div className="relative aspect-square bg-zinc-800/50 overflow-hidden">
-        {product.images[0] ? (
+        {product.images[0] || imgError ? (
           <Image
-            src={product.images[0]}
+            src={imgSrc}
             alt={product.name}
             fill
+            onError={() => setImgError(true)}
             className="object-contain p-4 group-hover:scale-105 transition-transform duration-700"
           />
         ) : (

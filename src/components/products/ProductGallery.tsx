@@ -3,6 +3,8 @@
 import { useState } from "react"
 import Image from "next/image"
 
+const PLACEHOLDER = "/products/placeholder.svg"
+
 interface ProductGalleryProps {
   images: string[]
   name: string
@@ -10,6 +12,15 @@ interface ProductGalleryProps {
 
 export default function ProductGallery({ images, name }: ProductGalleryProps) {
   const [selectedIdx, setSelectedIdx] = useState(0)
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({})
+
+  const handleError = (idx: number) => {
+    setImgErrors((prev) => ({ ...prev, [idx]: true }))
+  }
+
+  const getSrc = (img: string, idx: number) => {
+    return imgErrors[idx] ? PLACEHOLDER : img
+  }
 
   if (images.length === 0) {
     return (
@@ -23,11 +34,12 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
     <div className="space-y-4">
       <div className="relative aspect-square rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800">
         <Image
-          src={images[selectedIdx]}
+          src={getSrc(images[selectedIdx], selectedIdx)}
           alt={`${name} - Imagem ${selectedIdx + 1}`}
           fill
           className="object-contain p-8"
           priority
+          onError={() => handleError(selectedIdx)}
         />
       </div>
       {images.length > 1 && (
@@ -43,10 +55,11 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
               }`}
             >
               <Image
-                src={img}
+                src={getSrc(img, idx)}
                 alt={`${name} thumbnail ${idx + 1}`}
                 fill
                 className="object-contain p-2"
+                onError={() => handleError(idx)}
               />
             </button>
           ))}
