@@ -25,11 +25,11 @@ export default function HeroStore() {
         {/* Background Image Layer */}
         <div className="absolute inset-0 flex items-center justify-center blur-[1px] scale-110 pointer-events-none">
           <Image
-            src="/images/HERO_SQ_2.png"
+            src="/images/HERO_WIDE_1.png"
             alt="Hero Background"
-            width={750}
-            height={750}
-            className="object-contain max-h-[65vh] w-auto"
+            width={1200}
+            height={600}
+            className="object-contain max-h-[70vh] w-auto opacity-90"
           />
         </div>
 
