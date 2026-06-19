@@ -64,7 +64,7 @@ export default function HeroStore() {
             enableHover
             color="#F8FAFC"
           >
-            HARDWARE TÊXTIL PARA
+            VISTA O FUTURO.
           </FuzzyText>
           <FuzzyText
             fontSize="clamp(1rem, 3.5vw, 2.2rem)"
@@ -74,16 +74,16 @@ export default function HeroStore() {
             enableHover
             gradient={["#06B6D4", "#7C3AED"]}
           >
-            MENTES DIGITAIS
+            USE FRACTALSYS.
           </FuzzyText>
         </div>
 
         <div className="max-w-xl space-y-4 mb-10">
           <p className="text-zinc-300 text-xs md:text-base font-medium leading-relaxed">
-            Peças criadas para exploradores do impossível.
+            Roupas techwear premium com estética cyberpunk, design minimalista e presença digital.
           </p>
           <p className="text-zinc-500 text-[11px] md:text-sm leading-relaxed">
-            A FractalSyS Store une arte generativa, estética cyberpunk e moda techwear em produtos premium para quem vive entre código, IA e futuro.
+            Peças criadas para quem vive entre tecnologia, estilo e atitude.
           </p>
         </div>
 
