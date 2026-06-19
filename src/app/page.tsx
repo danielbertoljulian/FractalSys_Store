@@ -14,6 +14,7 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 export const revalidate = 60 // Revalidate every minute
 
 async function getFeaturedProducts() {
+  if (!db) return []
   try {
     return await db.select()
       .from(products)

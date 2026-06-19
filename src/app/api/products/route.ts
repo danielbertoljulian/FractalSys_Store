@@ -3,9 +3,16 @@ import { db } from '@/lib/db'
 import { products } from '@/lib/schema'
 import { eq, desc } from 'drizzle-orm'
 
+function requireDb() {
+  if (!db) {
+    throw new Error('Database not configured. Set DATABASE_URL environment variable.')
+  }
+  return db
+}
+
 export async function GET() {
   try {
-    const data = await db.select().from(products).orderBy(desc(products.sortOrder), desc(products.id))
+    const data = await requireDb().select().from(products).orderBy(desc(products.sortOrder), desc(products.id))
     return NextResponse.json(data)
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
@@ -19,7 +26,7 @@ export async function POST(req: Request) {
     if (!name) return NextResponse.json({ error: 'name is required' }, { status: 400 })
 
     const slugValue = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    const inserted = await db.insert(products).values({
+    const inserted = await requireDb().insert(products).values({
       name,
       slug: slugValue,
       description: description || null,
@@ -49,7 +56,7 @@ export async function PUT(req: Request) {
     const { id, name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured, isActive } = body
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
-    const updated = await db.update(products).set({
+    const updated = await requireDb().update(products).set({
       name,
       slug,
       description: description || null,
@@ -79,7 +86,7 @@ export async function DELETE(req: Request) {
     const id = url.searchParams.get('id')
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
-    await db.delete(products).where(eq(products.id, Number(id)))
+    await requireDb().delete(products).where(eq(products.id, Number(id)))
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })

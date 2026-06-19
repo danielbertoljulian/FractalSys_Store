@@ -3,12 +3,19 @@ import { db } from '@/lib/db'
 import { analytics, dailyReports } from '@/lib/schema'
 import { eq, sql, desc, and, gte, lte } from 'drizzle-orm'
 
+function requireDb() {
+  if (!db) {
+    throw new Error('Database not configured. Set DATABASE_URL environment variable.')
+  }
+  return db
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
     const { type, product_id, product_name, path, referrer } = body
 
-    await db.insert(analytics).values({
+    await requireDb().insert(analytics).values({
       type: type || 'visit',
       productId: product_id || null,
       productName: product_name || null,
@@ -30,7 +37,7 @@ export async function GET(req: Request) {
     const all = url.searchParams.get('all')
 
     if (all) {
-      const reports = await db.select().from(dailyReports).orderBy(desc(dailyReports.date))
+      const reports = await requireDb().select().from(dailyReports).orderBy(desc(dailyReports.date))
       return NextResponse.json(reports)
     }
 
@@ -38,7 +45,7 @@ export async function GET(req: Request) {
     const dayStart = new Date(date + 'T00:00:00Z')
     const dayEnd = new Date(date + 'T23:59:59Z')
 
-    const visits = await db.select({ count: sql<number>`count(*)` })
+    const visits = await requireDb().select({ count: sql<number>`count(*)` })
       .from(analytics)
       .where(and(
         eq(analytics.type, 'visit'),
@@ -46,7 +53,7 @@ export async function GET(req: Request) {
         lte(analytics.createdAt, dayEnd)
       ))
 
-    const clicks = await db.select({ count: sql<number>`count(*)` })
+    const clicks = await requireDb().select({ count: sql<number>`count(*)` })
       .from(analytics)
       .where(and(
         eq(analytics.type, 'click'),
@@ -54,7 +61,7 @@ export async function GET(req: Request) {
         lte(analytics.createdAt, dayEnd)
       ))
 
-    const topProducts = await db
+    const topProducts = await requireDb()
       .select({
         product_id: analytics.productId,
         product_name: analytics.productName,

@@ -4,9 +4,15 @@ import * as schema from './schema';
 
 neonConfig.fetchConnectionCache = true;
 
-if (!process.env.DATABASE_URL) {
-  console.warn("⚠️ DATABASE_URL não encontrada! O banco de dados não funcionará.");
+const url = process.env.DATABASE_URL;
+
+function createDb() {
+  if (!url || url.includes('user:password@host:port')) {
+    console.warn("⚠️ DATABASE_URL não configurada. API de banco desativada.");
+    return null;
+  }
+  const sql = neon(url);
+  return drizzle(sql, { schema });
 }
 
-const sql = neon(process.env.DATABASE_URL || "");
-export const db = drizzle(sql, { schema });
+export const db = createDb();
