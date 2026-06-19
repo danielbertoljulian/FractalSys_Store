@@ -25,8 +25,8 @@ export default function HeroStore() {
         <AudioReactiveHero
           src="/FRACTALSYS_4K_TRANSP.png"
           alt="FractalSyS Wear"
-          width={1100}
-          height={450}
+          width={550}
+          height={225}
           className="mx-auto"
         />
       </div>
