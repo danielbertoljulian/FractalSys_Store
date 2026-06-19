@@ -83,7 +83,7 @@ export default function HeroStore() {
             Roupas techwear premium com estética cyberpunk, design minimalista e presença digital.
           </p>
           <p className="text-zinc-500 text-[11px] md:text-sm leading-relaxed">
-            Peças criadas para quem vive entre tecnologia, estilo e atitude.
+            Para exploradores do impossível.
           </p>
         </div>
 
