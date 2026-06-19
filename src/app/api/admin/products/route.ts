@@ -1,7 +1,7 @@
 import { put, get } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
-const BLOB_KEY = 'admin-products.json';
+const BLOB_KEY = 'admin/products.json';
 
 async function readProducts(): Promise<any[]> {
   try {
@@ -17,18 +17,20 @@ async function readProducts(): Promise<any[]> {
     }
     text += decoder.decode();
     return JSON.parse(text);
-  } catch {
+  } catch (e) {
+    console.error('readProducts error:', e);
     return [];
   }
 }
 
 async function writeProducts(data: any[]) {
-  await put(BLOB_KEY, JSON.stringify(data, null, 2), {
+  const result = await put(BLOB_KEY, JSON.stringify(data, null, 2), {
     access: 'private',
     contentType: 'application/json',
     addRandomSuffix: false,
     allowOverwrite: true,
   });
+  return result;
 }
 
 export async function GET() {
@@ -51,8 +53,8 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
     products.push(newProduct);
-    await writeProducts(products);
-    return NextResponse.json(newProduct, { status: 201 });
+    const writeResult = await writeProducts(products);
+    return NextResponse.json({ ...newProduct, blobPath: writeResult.pathname }, { status: 201 });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
@@ -92,8 +94,8 @@ export async function DELETE(req: Request) {
     if (filtered.length === products.length) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
-    await writeProducts(filtered);
-    return NextResponse.json({ ok: true });
+    const writeResult = await writeProducts(filtered);
+    return NextResponse.json({ ok: true, pathname: writeResult.pathname });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
