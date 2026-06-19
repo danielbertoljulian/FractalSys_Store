@@ -49,8 +49,8 @@ export default function HeroStore() {
         </div>
       </div>
 
-      {/* Text content - Reajustado mt para ficar próximo aos logos */}
-      <div className={`relative z-10 mt-8 md:mt-12 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
+      {/* Text content - Bloco movido para baixo das imagens wide */}
+      <div className={`relative z-10 mt-24 md:mt-32 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
         <div className="max-w-xl mb-10">
           <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
             Para exploradores do impossível.
