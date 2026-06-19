@@ -75,7 +75,12 @@ export default function AdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product)
       });
-      if (!r.ok) throw new Error('Falha ao salvar produto');
+      if (!r.ok) {
+        const text = await r.text();
+        let msg = 'Falha ao salvar produto';
+        try { const j = JSON.parse(text); msg = j.error || msg; } catch {}
+        throw new Error(msg);
+      }
       setSuccess(isNew ? 'Produto criado!' : 'Produto atualizado!');
       setEditing(null);
       fetchProducts();
