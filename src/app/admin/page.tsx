@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, BarChart3, Image as ImageIcon, LogOut, Plus, Search, ChevronDown, Trash2, Edit, Save, X, Share2, Check } from 'lucide-react';
+import { getImageUrl } from '@/lib/imageProxy';
 
 const API = '/api/admin/products';
 const PWD_KEY = 'fs_admin_pwd';
@@ -252,7 +253,7 @@ export default function AdminPage() {
                   <div key={p.id} className="group bg-zinc-900/30 border border-zinc-800 hover:border-cyan-500/50 rounded-2xl overflow-hidden transition-all duration-300">
                     <div className="aspect-square bg-zinc-800 relative group-hover:opacity-80 transition-opacity flex items-center justify-center p-4">
                       {p.image ? (
-                        <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
+                        <img src={getImageUrl(p.image)} alt={p.name} className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).src = '/products/placeholder.svg' }} />
                       ) : (
                         <ImageIcon size={48} className="text-zinc-700" />
                       )}
@@ -391,7 +392,7 @@ function ProductForm({ product, onSave, onCancel }: { product: any, onSave: (p: 
 
           {form.image && (
             <div className="relative w-32 h-32 bg-zinc-900 rounded-2xl overflow-hidden border border-cyan-500/30 group">
-              <img src={form.image} alt="Main" className="w-full h-full object-cover" />
+              <img src={getImageUrl(form.image)} alt="Main" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/products/placeholder.svg' }} />
               <div className="absolute top-1 left-1 bg-cyan-600 text-[8px] text-white px-1.5 py-0.5 rounded-full font-bold uppercase">Principal</div>
               <button 
                 onClick={() => setForm((f: any) => ({ ...f, image: '' }))}
@@ -402,7 +403,7 @@ function ProductForm({ product, onSave, onCancel }: { product: any, onSave: (p: 
 
           {form.images.map((img: string, i: number) => (
             <div key={i} className="relative w-32 h-32 bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 group">
-              <img src={img} alt={`Asset ${i}`} className="w-full h-full object-cover" />
+              <img src={getImageUrl(img)} alt={`Asset ${i}`} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/products/placeholder.svg' }} />
               <button 
                 onClick={() => handleRemoveImage(i)}
                 className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"

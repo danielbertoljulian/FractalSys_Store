@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Orbitron } from "next/font/google"
 import type { Product } from "@/data/products"
 import { formatCurrency } from "@/lib/formatCurrency"
+import { getImageUrl } from "@/lib/imageProxy"
 import { useCartStore } from "@/store/cart-store"
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["500", "600", "700"] })
@@ -41,7 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.price - product.promotionalPrice) / product.price) * 100)
     : null
 
-  const imgSrc = !imgError && product.images[0] ? product.images[0] : PLACEHOLDER
+  const imgSrc = !imgError && product.images[0] ? getImageUrl(product.images[0]) : PLACEHOLDER
 
   return (
     <Link

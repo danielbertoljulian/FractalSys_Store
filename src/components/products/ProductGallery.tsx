@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { getImageUrl } from "@/lib/imageProxy"
 
 const PLACEHOLDER = "/products/placeholder.svg"
 
