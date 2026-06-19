@@ -7,19 +7,14 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 
 const pillars = [
   {
-    icon: "⚡",
+    icon: "/images/icon-tecnologia.png",
     title: "Tecnologia",
     description: "Cada peça carrega a essência da inovação digital. Estampas inspiradas em código, IA e fractais.",
   },
   {
-    icon: "🎨",
+    icon: "/images/icon-arte.png",
     title: "Arte Digital",
     description: "Designs exclusivos criados pela FractalSyS. Arte que conecta a cultura tech ao streetwear.",
-  },
-  {
-    icon: "🏆",
-    title: "Qualidade Premium",
-    description: "Camisetas 100% algodão penteado, moletons em fleece e estampas DTF de alta durabilidade.",
   },
 ]
 
@@ -44,17 +39,23 @@ export default function BrandSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {pillars.map((pillar) => (
           <div
             key={pillar.title}
-            className="group p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-cyan-500/30 hover:bg-zinc-900/60 transition-all duration-300 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.2)]"
+            className="group p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-cyan-500/30 hover:bg-zinc-900/60 transition-all duration-300 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.2)] flex flex-col items-center text-center"
           >
-            <span className="text-3xl mb-4 block">{pillar.icon}</span>
-            <h3 className={`text-base font-semibold text-zinc-200 mb-2 group-hover:text-white transition-colors ${orbitron.className}`}>
+            <div className="h-16 w-16 mb-6 flex items-center justify-center">
+              <img 
+                src={pillar.icon} 
+                alt={pillar.title} 
+                className="max-h-full max-w-full object-contain brightness-110" 
+              />
+            </div>
+            <h3 className={`text-lg font-semibold text-zinc-200 mb-3 group-hover:text-white transition-colors ${orbitron.className}`}>
               {pillar.title}
             </h3>
-            <p className="text-sm text-zinc-500 leading-relaxed">{pillar.description}</p>
+            <p className="text-sm text-zinc-500 leading-relaxed max-w-xs">{pillar.description}</p>
           </div>
         ))}
       </div>
