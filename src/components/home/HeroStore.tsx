@@ -31,8 +31,8 @@ export default function HeroStore() {
             height={800}
             className="object-contain w-full h-full max-h-[85vh]"
             style={{ 
-              maskImage: 'radial-gradient(circle, black 40%, transparent 95%)',
-              WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 95%)'
+              maskImage: 'radial-gradient(circle, black 30%, transparent 80%)',
+              WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 80%)'
             }}
           />
         </div>
