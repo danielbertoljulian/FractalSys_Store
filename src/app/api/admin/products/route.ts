@@ -5,9 +5,17 @@ const BLOB_KEY = 'admin-products.json';
 
 async function readProducts(): Promise<any[]> {
   try {
-    const blob = await get(BLOB_KEY);
-    if (!blob) return [];
-    const text = await blob.text();
+    const result = await get(BLOB_KEY, { access: 'private' });
+    if (!result || result.statusCode !== 200 || !result.stream) return [];
+    const reader = result.stream.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
     return JSON.parse(text);
   } catch {
     return [];
