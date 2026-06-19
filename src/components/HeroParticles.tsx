@@ -25,7 +25,7 @@ export default function HeroParticles() {
 
     const getAnchorFromLayout = (): { cxPct: number; cyPct: number } => {
       const img = parent.querySelector("img") as HTMLElement | null;
-      if (img) {
+      if (img && canvas.width > 0 && canvas.height > 0) {
         let el: HTMLElement | null = img;
         let imgOffsetLeft = 0, imgOffsetTop = 0;
         while (el && el !== parent) {
@@ -163,6 +163,8 @@ export default function HeroParticles() {
       for (const group of particles) {
         if (frame < group.delay) continue;
         for (const n of group.nodes) {
+          if (!Number.isFinite(n.x) || !Number.isFinite(n.y) || !Number.isFinite(n.r)) continue;
+          
           const gradient = offCtx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3);
           gradient.addColorStop(0, n.col);
           gradient.addColorStop(0.5, n.col + "88");
