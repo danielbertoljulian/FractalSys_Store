@@ -21,7 +21,7 @@ export default function HeroParticles() {
     type Particle = { x: number; y: number; vx: number; vy: number; r: number; col: string };
     let cx = 0, cy = 0, mobile = false;
     const offsetY = -0.02;
-    const getOffsetX = () => mobile ? -0.26 : -0.28;
+    const getOffsetX = () => mobile ? -0.24 : -0.26;
 
     const getAnchorFromLayout = (): { cxPct: number; cyPct: number } => {
       const img = parent.querySelector("img") as HTMLElement | null;
