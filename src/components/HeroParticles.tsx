@@ -70,7 +70,8 @@ export default function HeroParticles() {
 
       for (const g of particles) {
         for (const n of g.nodes) { n.x += cx - oldCx; n.y += cy - oldCy; }
-        g.maxRadius = Math.round(canvas.width * g.pct);
+        const groupPct = mobile ? g.pct * 0.5 : g.pct;
+        g.maxRadius = Math.round(canvas.width * groupPct);
       }
     };
     requestAnimationFrame(() => { onResize(); });
@@ -87,7 +88,8 @@ export default function HeroParticles() {
           col: (i + 1) % 2 === 0 ? "#06B6D4" : "#FF00FF",
         });
       }
-      particles.push({ nodes, maxRadius: Math.round(canvas.width * g.pct), pct: g.pct, lineColor: g.lineColor, delay: g.delay, active: false });
+      const groupPct = mobile ? g.pct * 0.5 : g.pct;
+      particles.push({ nodes, maxRadius: Math.round(canvas.width * groupPct), pct: g.pct, lineColor: g.lineColor, delay: g.delay, active: false });
     }
 
     let frame = 0;

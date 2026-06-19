@@ -135,8 +135,8 @@ export default function AudioReactiveHero({ src, alt, width, height, className =
   return (
     <div className={`relative w-full flex justify-center ${className}`}>
       <div 
-        className="relative z-10" 
-        style={{ width: `${width}px`, height: 'auto', maxWidth: '100%' }}
+        className="relative z-10 w-full max-w-[270px] md:max-w-none" 
+        style={{ width: `${width}px`, height: 'auto' }}
       >
         <FuzzyImage
           src={src}
