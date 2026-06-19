@@ -46,7 +46,7 @@ export default async function Home() {
       {/* Galaxy starfield background */}
       <Galaxy
         hueShift={180}
-        density={1.2}
+        density={0.4}
         saturation={0.6}
         glowIntensity={0.4}
         twinkleIntensity={0.5}
