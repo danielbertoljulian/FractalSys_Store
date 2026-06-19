@@ -80,7 +80,7 @@ export default function HeroStore() {
 
         <div className="max-w-xl space-y-4 mb-10">
           <p className="text-zinc-300 text-xs md:text-base font-medium leading-relaxed">
-            Peças criadas para programadores, criadores, hackers, builders e exploradores do impossível.
+            Peças criadas para exploradores do impossível.
           </p>
           <p className="text-zinc-500 text-[11px] md:text-sm leading-relaxed">
             A FractalSyS Store une arte generativa, estética cyberpunk e moda techwear em produtos premium para quem vive entre código, IA e futuro.
