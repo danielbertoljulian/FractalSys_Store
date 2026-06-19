@@ -38,7 +38,7 @@ export default function HeroStore() {
         </div>
 
         {/* Foreground Active Hero - Aumentado 30% para 360px */}
-        <div className="relative z-10 transform -translate-y-6 md:-translate-y-12">
+        <div className="relative z-10 transform -translate-y-12 md:-translate-y-20">
           <AudioReactiveHero
             src="/FRACTALSYS_4K_TRANSP.png"
             alt="FractalSyS Wear"
