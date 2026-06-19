@@ -13,11 +13,11 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 
 export default function HeroStore() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-12">
+    <section className="relative min-h-[70vh] flex flex-col items-center justify-start overflow-hidden pt-28 pb-12">
       {/* Laser glow ambient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-cyan-500/5 rounded-full blur-[160px]" />
-        <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-violet-600/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-cyan-500/5 rounded-full blur-[160px]" />
+        <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-violet-600/5 rounded-full blur-[120px]" />
       </div>
 
       {/* Hero logo with audio-reactive fuzzy effect and background image */}
@@ -29,7 +29,7 @@ export default function HeroStore() {
             alt="Hero Background"
             width={1200}
             height={600}
-            className="object-contain max-h-[75vh] w-auto opacity-90"
+            className="object-contain max-h-[60vh] w-auto opacity-90"
             style={{ 
               maskImage: 'radial-gradient(circle, black 25%, transparent 75%)',
               WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 75%)'
@@ -37,8 +37,8 @@ export default function HeroStore() {
           />
         </div>
 
-        {/* Foreground Active Hero - Reduzido 50% para 275px */}
-        <div className="relative z-10 transform -translate-y-16 md:-translate-y-24">
+        {/* Foreground Active Hero - Posicionado logo abaixo do navbar */}
+        <div className="relative z-10 transform -translate-y-4 md:-translate-y-8">
           <AudioReactiveHero
             src="/FRACTALSYS_4K_TRANSP.png"
             alt="FractalSyS Wear"
@@ -49,8 +49,8 @@ export default function HeroStore() {
         </div>
       </div>
 
-      {/* Text content - Bloco movido ainda mais para baixo */}
-      <div className={`relative z-10 mt-24 md:mt-32 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
+      {/* Text content - Reajustado mt para ficar próximo aos logos */}
+      <div className={`relative z-10 mt-8 md:mt-12 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
         <div className="max-w-xl mb-10">
           <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
             Para exploradores do impossível.
