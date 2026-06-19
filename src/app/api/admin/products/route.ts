@@ -1,15 +1,14 @@
-import { put, list, del } from '@vercel/blob';
+import { put, get } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 const BLOB_KEY = 'admin-products.json';
 
 async function readProducts(): Promise<any[]> {
   try {
-    const { blobs } = await list({ prefix: BLOB_KEY });
-    if (blobs.length === 0) return [];
-    const res = await fetch(blobs[0].url);
-    if (!res.ok) return [];
-    return await res.json();
+    const blob = await get(BLOB_KEY);
+    if (!blob) return [];
+    const text = await blob.text();
+    return JSON.parse(text);
   } catch {
     return [];
   }
