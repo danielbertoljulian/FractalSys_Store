@@ -23,7 +23,7 @@ export default function HeroStore() {
       {/* Hero logo with audio-reactive fuzzy effect and background image */}
       <div className="relative w-full max-w-[1400px] mx-auto px-4 md:px-10 mb-2 flex items-center justify-center">
         {/* Background Image Layer - Totalmente nítida, apenas com máscara de borda */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center translate-y-4 pointer-events-none">
           <Image
             src="/images/HERO_WIDE_1.png"
             alt="Hero Background"
