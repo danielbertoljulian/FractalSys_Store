@@ -55,31 +55,8 @@ export default function HeroStore() {
           Genesis
         </span>
 
-        <div className="flex flex-col items-center justify-center gap-x-3 gap-y-1 mb-6">
-          <FuzzyText
-            fontSize="clamp(1.2rem, 4vw, 2.8rem)"
-            fontWeight={700}
-            baseIntensity={0.03}
-            hoverIntensity={0.05}
-            enableHover
-            color="#F8FAFC"
-          >
-            FRACTALSYS
-          </FuzzyText>
-          <FuzzyText
-            fontSize="clamp(1.2rem, 4vw, 2.8rem)"
-            fontWeight={700}
-            baseIntensity={0.03}
-            hoverIntensity={0.05}
-            enableHover
-            gradient={["#06B6D4", "#7C3AED"]}
-          >
-            STORE
-          </FuzzyText>
-        </div>
-
         <div className="max-w-xl mb-10">
-          <p className="text-zinc-300 text-sm md:text-lg font-medium tracking-[0.1em] uppercase">
+          <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
             Para exploradores do impossível.
           </p>
         </div>
