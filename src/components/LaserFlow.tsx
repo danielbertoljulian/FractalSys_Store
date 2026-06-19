@@ -384,7 +384,7 @@ export const LaserFlow: React.FC<LaserFlowProps> = ({
     mesh.frustumCulled = false;
     scene.add(mesh);
 
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
     let prevTime = 0;
     let fade = hasFadedRef.current ? 1 : 0;
 
@@ -507,7 +507,7 @@ export const LaserFlow: React.FC<LaserFlowProps> = ({
       raf = requestAnimationFrame(animate);
       if (pausedRef.current || !inViewRef.current) return;
 
-      const t = clock.getElapsedTime();
+      const t = (performance.now() - startTime) * 0.001;
       const dt = Math.max(0, t - prevTime);
       prevTime = t;
 

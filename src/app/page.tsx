@@ -2,14 +2,48 @@ import { Orbitron } from "next/font/google"
 import HeroStore from "@/components/home/HeroStore"
 import FeaturedCollection from "@/components/home/FeaturedCollection"
 import BrandSection from "@/components/home/BrandSection"
-import { getFeaturedProducts, collections } from "@/data/products"
+import { db } from "@/lib/db"
+import { products as productsTable } from "@/lib/schema"
+import { eq, and, desc } from "drizzle-orm"
+import { getFeaturedProducts as getStaticFeaturedProducts, collections } from "@/data/products"
 import Galaxy from "@/components/Galaxy"
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 
-export default function Home() {
-  const featuredProducts = getFeaturedProducts()
-  const genesisCollection = collections.find((c) => c.slug === "genesis-drop-01")
+export const revalidate = 60 // Revalidate every minute
+
+async function getFeaturedProducts() {
+  if (!db) {
+    console.info("Info: Usando dados estáticos (DB não configurado)");
+    return getStaticFeaturedProducts();
+  }
+
+  try {
+    const fetched = await db.select()
+      .from(productsTable)
+      .where(and(eq(productsTable.isActive, true), eq(productsTable.isFeatured, true)))
+      .orderBy(desc(productsTable.sortOrder), desc(productsTable.id))
+    
+    return fetched.map(p => ({
+      ...p,
+      id: p.id.toString(),
+      images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
+      price: parseFloat(p.price || "0"),
+      promotionalPrice: p.off ? (parseFloat(p.price || "0") * (1 - p.off / 100)) : undefined,
+      sizes: ["P", "M", "G", "GG", "XG"],
+      colors: (p.colors || "").split(", "),
+      category: p.categories || "Geral",
+      collection: p.brand || ""
+    }))
+  } catch (error) {
+    console.error("Error fetching featured products:", error)
+    return getStaticFeaturedProducts();
+  }
+}
+
+export default async function Home() {
+  const featuredProducts = await getFeaturedProducts()
+  const genesisCollection = collections.find((c) => c.slug === "genesis-drop-01") || collections[0]
 
   return (
     <div className="relative min-h-screen">
@@ -29,7 +63,7 @@ export default function Home() {
 
         {genesisCollection && featuredProducts.length > 0 && (
           <FeaturedCollection
-            products={featuredProducts}
+            products={featuredProducts as any}
             collectionName={genesisCollection.name}
             collectionSlug={genesisCollection.slug}
             description={genesisCollection.description}

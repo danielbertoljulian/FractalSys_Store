@@ -291,17 +291,39 @@ function ProductForm({ product, onSave, onCancel }: { product: any, onSave: (p: 
     images: product.images ? (typeof product.images === 'string' ? JSON.parse(product.images) : product.images) : []
   });
 
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setForm((f: any) => ({ ...f, [name]: value }));
   };
 
-  const handleAddField = (field: string) => {
-    const val = prompt(`Add ${field}:`);
-    if (val) {
-      if (field === 'images') {
-        setForm((f: any) => ({ ...f, images: [...(f.images || []), val] }));
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) return;
+    
+    setUploading(true);
+    try {
+      const file = event.target.files[0];
+      const response = await fetch(`/api/upload?filename=${file.name}`, {
+        method: 'POST',
+        body: file,
+      });
+
+      if (!response.ok) throw new Error('Falha no upload');
+      
+      const newBlob = await response.json();
+      
+      // Se não tem imagem principal, define esta como principal
+      if (!form.image) {
+        setForm((f: any) => ({ ...f, image: newBlob.url }));
+      } else {
+        setForm((f: any) => ({ ...f, images: [...f.images, newBlob.url] }));
       }
+    } catch (error) {
+      alert('Erro ao fazer upload da imagem');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -344,26 +366,51 @@ function ProductForm({ product, onSave, onCancel }: { product: any, onSave: (p: 
       </div>
 
       <div>
-        <label className={labelClass}>Visual Uplink (Logo/Image URL)</label>
-        <div className="flex gap-3">
-          <input name="image" value={form.image || ''} onChange={handleChange} className={inputClass} placeholder="https://..." />
-          <button onClick={() => handleAddField('images')} className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 rounded-xl whitespace-nowrap">ADD SUB-IMG</button>
-        </div>
-      </div>
+        <label className={labelClass}>Visual Assets (Imagens)</label>
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div 
+            onClick={() => !uploading && fileInputRef.current?.click()}
+            className={`w-32 h-32 border-2 border-dashed border-zinc-800 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all text-zinc-500 hover:text-cyan-400 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {uploading ? (
+              <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <Plus size={24} />
+                <span className="text-[10px] mt-2 font-bold uppercase">Upload</span>
+              </>
+            )}
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload} 
+              className="hidden" 
+              accept="image/*"
+            />
+          </div>
 
-      {form.images.length > 0 && (
-        <div className="flex flex-wrap gap-4">
+          {form.image && (
+            <div className="relative w-32 h-32 bg-zinc-900 rounded-2xl overflow-hidden border border-cyan-500/30 group">
+              <img src={form.image} alt="Main" className="w-full h-full object-cover" />
+              <div className="absolute top-1 left-1 bg-cyan-600 text-[8px] text-white px-1.5 py-0.5 rounded-full font-bold uppercase">Principal</div>
+              <button 
+                onClick={() => setForm((f: any) => ({ ...f, image: '' }))}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              ><X size={12} /></button>
+            </div>
+          )}
+
           {form.images.map((img: string, i: number) => (
-            <div key={i} className="relative w-24 h-24 bg-zinc-800 rounded-xl overflow-hidden border border-zinc-700">
-              <img src={img} className="w-full h-full object-contain" />
+            <div key={i} className="relative w-32 h-32 bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 group">
+              <img src={img} alt={`Asset ${i}`} className="w-full h-full object-cover" />
               <button 
                 onClick={() => handleRemoveImage(i)}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
               ><X size={12} /></button>
             </div>
           ))}
         </div>
-      )}
+      </div>
 
       <div>
         <label className={labelClass}>Technical Description</label>
