@@ -4,15 +4,19 @@ import ProductGallery from "@/components/products/ProductGallery"
 import ProductInfo from "@/components/products/ProductInfo"
 import { db } from "@/lib/db"
 import { products as productsTable } from "@/lib/schema"
-import { eq } from "drizzle-orm"
+import { eq, or, like } from "drizzle-orm"
 import { products as staticProducts } from "@/data/products"
 import { parseBrPrice } from "@/lib/formatCurrency"
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["600", "700"] })
 
+function toSlug(str: string) {
+  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "")
+}
+
 export async function generateStaticParams() {
   if (!db) return staticProducts.map(p => ({ slug: p.slug }));
-  
+
   try {
     const allProducts = await db.select({ slug: productsTable.slug }).from(productsTable)
     return allProducts.map((p) => ({ slug: p.slug }))
@@ -22,18 +26,20 @@ export async function generateStaticParams() {
 }
 
 async function getProduct(slug: string) {
+  const normalizedSlug = toSlug(slug);
+
   if (!db) {
-    return staticProducts.find((p) => p.slug === slug);
+    return staticProducts.find((p) => p.slug === normalizedSlug || p.slug === slug);
   }
 
   try {
     const productData = await db.select()
       .from(productsTable)
-      .where(eq(productsTable.slug, slug))
+      .where(or(eq(productsTable.slug, normalizedSlug), eq(productsTable.slug, slug)))
       .limit(1)
-    
+
     if (!productData || productData.length === 0) {
-      return staticProducts.find((p) => p.slug === slug);
+      return staticProducts.find((p) => p.slug === normalizedSlug || p.slug === slug);
     }
 
     const p = productData[0]
@@ -46,7 +52,7 @@ async function getProduct(slug: string) {
     if (p.image && !gallery.includes(p.image)) {
       gallery = [p.image, ...gallery];
     }
-    
+
     return {
       ...p,
       id: p.id.toString(),
@@ -60,7 +66,7 @@ async function getProduct(slug: string) {
       collection: p.brand || ""
     }
   } catch {
-    return staticProducts.find((p) => p.slug === slug);
+    return staticProducts.find((p) => p.slug === normalizedSlug || p.slug === slug);
   }
 }
 

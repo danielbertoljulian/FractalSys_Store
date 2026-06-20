@@ -350,9 +350,21 @@ function ProductForm({ product, onSave, onCancel }: { product: any, onSave: (p: 
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const toSlug = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setForm((f: any) => ({ ...f, [name]: value }));
+    setForm((f: any) => {
+      const next = { ...f, [name]: value };
+      if (name === 'name' && !f.id) {
+        next.slug = toSlug(value);
+      }
+      if (name === 'slug') {
+        next.slug = toSlug(value);
+      }
+      return next;
+    });
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

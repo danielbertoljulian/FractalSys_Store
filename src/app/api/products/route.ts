@@ -10,6 +10,10 @@ function requireDb() {
   return db
 }
 
+function toSlug(str: string) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '')
+}
+
 export async function GET() {
   try {
     const data = await requireDb().select().from(products).orderBy(desc(products.sortOrder), desc(products.id))
@@ -25,7 +29,7 @@ export async function POST(req: Request) {
     const { name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured } = body
     if (!name) return NextResponse.json({ error: 'name is required' }, { status: 400 })
 
-    const slugValue = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const slugValue = toSlug(slug || name)
     const inserted = await requireDb().insert(products).values({
       name,
       slug: slugValue,
@@ -56,9 +60,11 @@ export async function PUT(req: Request) {
     const { id, name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured, isActive } = body
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
+    const slugValue = toSlug(slug || name)
+
     const updated = await requireDb().update(products).set({
       name,
-      slug,
+      slug: slugValue,
       description: description || null,
       brand: brand || null,
       categories: categories || null,

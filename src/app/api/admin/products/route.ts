@@ -3,6 +3,10 @@ import { db } from '@/lib/db'
 import { products } from '@/lib/schema'
 import { eq, desc } from 'drizzle-orm'
 
+function normalizeSlug(str: string): string {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+}
+
 function requireDb() {
   if (!db) {
     throw new Error('Database not configured. Set DATABASE_URL environment variable.')
@@ -26,7 +30,7 @@ export async function POST(req: Request) {
     const { name, slug, description, brand, categories, width, height, depth, colors, price, off, image, images, isFeatured, isActive } = body
     if (!name) return NextResponse.json({ error: 'name is required' }, { status: 400 })
 
-    const slugValue = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const slugValue = normalizeSlug(slug || name)
     const inserted = await requireDb().insert(products).values({
       name,
       slug: slugValue,
@@ -63,9 +67,11 @@ export async function PUT(req: Request) {
     const targetId = Number(id);
     if (isNaN(targetId)) return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
 
+    const normalizedSlug = normalizeSlug(slug);
+
     const updated = await requireDb().update(products).set({
       name,
-      slug,
+      slug: normalizedSlug,
       description: description || null,
       brand: brand || null,
       categories: categories || null,
@@ -99,6 +105,24 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     console.error('API Error (DELETE):', e);
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  }
+}
+
+export async function PATCH() {
+  try {
+    const allProducts = await requireDb().select().from(products)
+    let fixed = 0
+    for (const p of allProducts) {
+      const normalized = normalizeSlug(p.slug)
+      if (normalized !== p.slug) {
+        await requireDb().update(products).set({ slug: normalized }).where(eq(products.id, p.id))
+        fixed++
+      }
+    }
+    return NextResponse.json({ fixed, total: allProducts.length })
+  } catch (e: any) {
+    console.error('API Error (PATCH):', e);
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }

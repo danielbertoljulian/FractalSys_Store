@@ -53,7 +53,7 @@ export default function HeroStore() {
       <div className={`relative z-10 mt-48 md:mt-64 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto ${orbitron.className}`}>
         <div className="max-w-xl mb-10">
           <p className="text-zinc-300 text-sm md:text-xl font-medium tracking-[0.2em] uppercase">
-            Para exploradores do impossível.
+            Para exploradores do infinito.
           </p>
         </div>
 
